@@ -28,12 +28,4 @@ public:
    
 };
 
-int main()
-{
-    ifstream file("engmix.txt");
-    dictionaryHashTable dictionary(file);
-    unordered_set<string> words = dictionary.getWords();
-    for (auto & word:words)
-        cout << word << endl;
-    return 0;
-}
+
