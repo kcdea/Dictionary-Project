@@ -119,13 +119,13 @@ void test() {
 
 	cout << "TEST 3: FINDING NOISY WORDS\n" << endl;
 
-	findwords("correct words.txt", tree);
+	findwords("slightly misspelled.txt", tree);
 	cout << endl;
-	findwords("correct words.txt", table);
+	findwords("slightly misspelled.txt", table);
 
 	cout << "TEST 4: FINDING RANDOM WORDS\n" << endl;
 
-	findwords("slightly misspelled.txt", tree);
+	findwords("random.txt", tree);
 	cout << endl;
 	findwords("random.txt", table);
 }
