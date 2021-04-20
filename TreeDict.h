@@ -14,26 +14,26 @@ class TreeDict {
 		char letter;
 		map<char, Node*> children;
 
-		Node(char l) { letter =  l; }
-	};	
+		Node(char l) { letter = l; }
+	};
 
-	private:
-		Node* root = new Node('\x02');
-		int size = 0;
+private:
+	Node* root = new Node('\x02');
+	int size = 0;
 
-		void addWord(string word);
-		void unpack(Node* root, vector<string>& words, string word);
-		vector<string> findCandidates(string word);
-	public:
-		TreeDict(string filename);
-		void find(string word);
-		int getSize() { return size; }
+	void addWord(string word);
+	void unpack(Node* root, vector<string>& words, string word);
+	vector<string> findCandidates(string word);
+public:
+	TreeDict(string filename);
+	void find(string word, bool display = true);
+	int getSize() { return size; }
 };
 
 
 void TreeDict::addWord(string word) {
 	Node* aux = root;
-	
+
 	for (unsigned int i = 0; i < word.length(); i++) {
 		// For readability
 		char letter = word[i];
@@ -84,7 +84,7 @@ vector<string> TreeDict::findCandidates(string word) {
 	unpack(aux, words, temp);
 
 	float minDist = INFINITY;
-	
+
 	for (auto itr = words.begin(); itr != words.end(); itr++) {
 		float dist = editDistance(*itr, word, 1, 1, 2);
 		if (dist < minDist) {
@@ -99,7 +99,7 @@ vector<string> TreeDict::findCandidates(string word) {
 	return pool;
 }
 
-void TreeDict::find(string word) {
+void TreeDict::find(string word, bool display) {
 	Node* aux = root;
 
 	for (unsigned int i = 0; i < word.length(); i++) {
@@ -110,10 +110,13 @@ void TreeDict::find(string word) {
 
 		// If it does not find the letter in the node's children, returns
 		if (found == aux->children.end()) {
-			cout << word << " is not in the dictionary, did you mean: ";
+			if (display)
+				cout << word << " is not in the dictionary, did you mean: ";
 
 			vector<string> pool = findCandidates(word);
 
+			if (!display)
+				return;
 
 			for (unsigned int i = 0; i < pool.size(); i++) {
 				cout << pool[i] << "? ";
@@ -124,6 +127,6 @@ void TreeDict::find(string word) {
 
 		aux = aux->children[letter];
 	}
-
-	cout << word << " is in the dictionary" << endl;
+	if (display)
+		cout << word << " is in the dictionary" << endl;
 }
