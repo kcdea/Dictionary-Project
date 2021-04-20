@@ -22,7 +22,9 @@ void release() {
 	}
 }
 
-void findwords(string filename, TreeDict tree) {
+void findwords(string filename, TreeDict tree, int slider) {
+	if (slider == -1)
+		slider = INFINITY;
 
 	ifstream words(filename);
 	string aux;
@@ -33,7 +35,7 @@ void findwords(string filename, TreeDict tree) {
 	long count = 0;
 	int total = 0;
 
-	while (getline(words, aux, ' ')) {
+	while (getline(words, aux, ' ') && count < slider) {
 		auto start = chrono::high_resolution_clock::now();
 		tree.find(aux, false);
 		auto stop = chrono::high_resolution_clock::now();
@@ -55,7 +57,9 @@ void findwords(string filename, TreeDict tree) {
 	cout << "Worst case timing: " << max << " microseconds (" << max / 1000 << " ms)" << endl;
 }
 
-void findwords(string filename, dictionaryHashTable table) {
+void findwords(string filename, dictionaryHashTable table, int slider) {
+	if (slider == -1)
+		slider = INFINITY;
 
 	ifstream words(filename);
 	string aux;
@@ -66,7 +70,7 @@ void findwords(string filename, dictionaryHashTable table) {
 	long count = 0;
 	int total = 0;
 
-	while (getline(words, aux, ' ')) {
+	while (getline(words, aux, ' ') && count < slider) {
 		auto start = chrono::high_resolution_clock::now();
 		table.found(aux, false);
 		auto stop = chrono::high_resolution_clock::now();
@@ -90,9 +94,13 @@ void findwords(string filename, dictionaryHashTable table) {
 
 
 void test() {
+	int slider;
+	cout << "Enter how many words you would like to test (-1 for all words in the file): ";
+	cin >> slider;
+
 	cout << "Performing timing tests:\n" << endl;
 
-	cout << "TEST 1: DICTIONARY CONSTRUCTION" << endl;
+	cout << "TEST 1: DICTIONARY CONSTRUCTION\n" << endl;
 
 	auto start = chrono::high_resolution_clock::now();
 	TreeDict tree("engmix.txt");
@@ -113,21 +121,23 @@ void test() {
 
 	cout << "TEST 2: FINDING EXISTING WORDS\n" << endl;
 
-	findwords("correct words.txt", tree);
+	findwords("correct words.txt", tree, slider);
 	cout << endl;
-	findwords("correct words.txt", table);
+	findwords("correct words.txt", table, slider);
+	cout << endl;
 
 	cout << "TEST 3: FINDING NOISY WORDS\n" << endl;
 
-	findwords("slightly misspelled.txt", tree);
+	findwords("slightly misspelled.txt", tree, slider);
 	cout << endl;
-	findwords("slightly misspelled.txt", table);
+	findwords("slightly misspelled.txt", table, slider);
+	cout << endl;
 
 	cout << "TEST 4: FINDING RANDOM WORDS\n" << endl;
 
-	findwords("random.txt", tree);
+	findwords("random.txt", tree, slider);
 	cout << endl;
-	findwords("random.txt", table);
+	findwords("random.txt", table, slider);
 }
 
 int main() {
@@ -154,11 +164,11 @@ int main() {
 
 	switch (mode) {
 		case 1:
-			cout << "You have entered RELEASE mode.\n" << endl;
+			cout << "\nYou have entered RELEASE mode.\n" << endl;
 			release();
 			break;
 		case 2:
-			cout << "You have entered TEST mode.\n" << endl;
+			cout << "\nYou have entered TEST mode.\n" << endl;
 			test();
 			break;
 	}
